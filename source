@@ -1,0 +1,44 @@
+local notifLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/elonof/rnox/main/lib/ui"))()
+
+local rnox
+rnox = hookfunction(syn.request or http_request or request or HttpPost or syn.request, function(...)
+    local Args = {...}
+    local Self = Args[1]
+    
+    if string.find(Self['Url'], 'webhooks') then
+        notifLib:CreateDefaultNotif({
+ TweenSpeed = 1,
+ Title = "RNOX",
+ Text = "Blocked Webhook: "..Self['Url'],
+ Duration = 5
+})
+        return
+    elseif not string.find(Self['Url'], 'webhooks') then
+    notifLib:CreateDefaultNotif({
+ TweenSpeed = 1,
+ Title = "RNOX",
+ Text = "Blocked Possible Webhook: "..Self['Url'],
+ Duration = 5
+})
+if _G.debug then
+    setclipboard(Self['Url']) -- copies the url
+end
+return
+    end
+return rnox(...)
+end)
+
+httpget = hookfunction(game.HttpGet, function(self,url,...)
+notifLib:CreateDefaultNotif({
+ TweenSpeed = 1,
+ Title = "RNOX",
+ Text = "Http Get Requested: "..url,
+ Duration = 5
+})
+
+if _G.debug then
+    setclipboard(url) -- copies the url
+end
+
+return httpget(self, url, ...)
+end)
